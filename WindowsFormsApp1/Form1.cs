@@ -62,7 +62,7 @@ namespace WindowsFormsApp1
         private void button1_Click(object sender, EventArgs e)
         {
             // Creating new instance of Form2 that will display the sweeper
-            Form2 form2 = new Form2(15, 15, 15);
+            Form2 form2 = new Form2(15, 15, 25);
 
             // Displaying Form2
             form2.ShowDialog();

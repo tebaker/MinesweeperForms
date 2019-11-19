@@ -132,7 +132,6 @@ namespace WindowsFormsApp1
          */
         private void btnClick(object sender, EventArgs e, btn clickedBtn)
         {
-            //MessageBox.Show(btn.toString());
             // On click, calling function for updating button text display
             updateBtnText(clickedBtn);
         }
@@ -260,234 +259,250 @@ namespace WindowsFormsApp1
         // After btn clicked, the program will preform steps to address the display and update of the clicked on square
         public void updateBtnText(btn clickedBtn)
         {
-            // New stack that will hold all the buttons to be checked
-            Queue<btn> heldBtns = new Queue<btn>();
-
-            // Adding first button to be checked
-            heldBtns.Enqueue(clickedBtn);
-
-            // While there are still buttons to be checked, keep looping
-            while(heldBtns.Count != 0)
+            // If the clicked button is not '*' and not null, reveal it and do nothing else
+            if (btnArray[clickedBtn.btnN, clickedBtn.btnM].btnText != "*" && btnArray[clickedBtn.btnN, clickedBtn.btnM].btnText != null)
             {
-                btn activeBtn = heldBtns.Peek();
+                btnArray[clickedBtn.btnN, clickedBtn.btnM].heldBtn.Text = btnArray[clickedBtn.btnN, clickedBtn.btnM].btnText;
+                clickedBtn.heldBtn.BackColor = Color.Cornsilk;
+            }
+            // If clicked button is '*', then BOOM and game over
+            else if(btnArray[clickedBtn.btnN, clickedBtn.btnM].btnText == "*")
+            {
+                MessageBox.Show("BOOM!");
 
-                MessageBox.Show(activeBtn.btnN + " " + activeBtn.btnM);
+                // REVEAL BOARD, END GAME
+            }
+            // if the others fail, that means the button clicked is a blank, time to reveal!
+            else
+            {
+                // New stack that will hold all the buttons to be checked
+                Queue<btn> heldBtns = new Queue<btn>();
 
-                int nIndex = activeBtn.btnN;
-                int mIndex = activeBtn.btnM;
+                // Adding first button to be checked
+                heldBtns.Enqueue(clickedBtn);
 
-                // Holding the indecies to be checked in the 8 spaces around the b
-                int checkIndexN = nIndex;
-                int checkIndexM = mIndex;
-
-                // N  check (-n, m)
-                checkIndexN = nIndex - 1;
-                checkIndexM = mIndex;
-                // Going up; checking if n is in bounds
-                if (checkIndexN >= 0)
+                // While there are still buttons to be checked, keep looping
+                while (heldBtns.Count != 0)
                 {
-                    // If text is null, then
-                    if(btnArray[checkIndexN, checkIndexM].btnText == null)
-                    {   
-                        // If button is not already in queue AND not already uncovered
-                        if(heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
-                        {
-                            heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
+                    btn activeBtn = heldBtns.Peek();
 
-                            // Once added to queue, mark blue
-                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                    //MessageBox.Show(activeBtn.btnN + " " + activeBtn.btnM);
+
+                    int nIndex = activeBtn.btnN;
+                    int mIndex = activeBtn.btnM;
+
+                    // Holding the indecies to be checked in the 8 spaces around the b
+                    int checkIndexN = nIndex;
+                    int checkIndexM = mIndex;
+
+                    // N  check (-n, m)
+                    checkIndexN = nIndex - 1;
+                    checkIndexM = mIndex;
+                    // Going up; checking if n is in bounds
+                    if (checkIndexN >= 0)
+                    {
+                        // If text is null, then
+                        if (btnArray[checkIndexN, checkIndexM].btnText == null)
+                        {
+                            // If button is not already in queue AND not already uncovered
+                            if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                            {
+                                heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
+
+                                // Once added to queue, mark blue
+                                btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                            }
+                        }
+                        // If text is NOT '*', it is a number. Reveal and mark cornsilk
+                        else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                        {
+                            btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
+                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
                         }
                     }
-                    // If text is NOT '*', it is a number. Reveal and mark cornsilk
-                    else if(btnArray[checkIndexN, checkIndexM].btnText != "*")
+                    // NE check (-n,+m)
+                    checkIndexN = nIndex - 1;
+                    checkIndexM = mIndex + 1;
+                    // Going up, going right; checking if n, m is in bounds
+                    if (checkIndexN >= 0 && checkIndexM < mHeight)
                     {
-                        btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
-                        btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
-                    }
-                }
-                // NE check (-n,+m)
-                checkIndexN = nIndex - 1;
-                checkIndexM = mIndex + 1;
-                // Going up, going right; checking if n, m is in bounds
-                if (checkIndexN >= 0 && checkIndexM < mHeight)
-                {
-                    // If text is null, add to queue if not already added
-                    if (btnArray[checkIndexN, checkIndexM].btnText == null)
-                    {
-                        // If button is not already in queue AND not already uncovered
-                        if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                        // If text is null, add to queue if not already added
+                        if (btnArray[checkIndexN, checkIndexM].btnText == null)
                         {
-                            heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
+                            // If button is not already in queue AND not already uncovered
+                            if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                            {
+                                heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
 
-                            // Once added to queue, mark blue
-                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                                // Once added to queue, mark blue
+                                btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                            }
+                        }
+                        // If text is NOT '*', it is a number. Reveal and mark cornsilk
+                        else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                        {
+                            btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
+                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
                         }
                     }
-                    // If text is NOT '*', it is a number. Reveal and mark cornsilk
-                    else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                    // E  check (n, +m)
+                    checkIndexN = nIndex;
+                    checkIndexM = mIndex + 1;
+                    // Going right; checking if m is in bounds
+                    if (checkIndexM < mHeight)
                     {
-                        btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
-                        btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
-                    }
-                }
-                // E  check (n, +m)
-                checkIndexN = nIndex;
-                checkIndexM = mIndex + 1;
-                // Going right; checking if m is in bounds
-                if (checkIndexM < mHeight)
-                {
-                    // If text is null, add to queue if not already added
-                    if (btnArray[checkIndexN, checkIndexM].btnText == null)
-                    {
-                        // If button is not already in queue AND not already uncovered
-                        if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                        // If text is null, add to queue if not already added
+                        if (btnArray[checkIndexN, checkIndexM].btnText == null)
                         {
-                            heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
+                            // If button is not already in queue AND not already uncovered
+                            if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                            {
+                                heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
 
-                            // Once added to queue, mark blue
-                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                                // Once added to queue, mark blue
+                                btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                            }
+                        }
+                        // If text is NOT '*', it is a number. Reveal and mark cornsilk
+                        else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                        {
+                            btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
+                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
                         }
                     }
-                    // If text is NOT '*', it is a number. Reveal and mark cornsilk
-                    else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                    // SW check (+n,+m)
+                    checkIndexN = nIndex + 1;
+                    checkIndexM = mIndex + 1;
+                    // Going down, going right; checking if n, m is in bounds
+                    if (checkIndexN < nWidth && checkIndexM < mHeight)
                     {
-                        btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
-                        btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
-                    }
-                }
-                // SW check (+n,+m)
-                checkIndexN = nIndex + 1;
-                checkIndexM = mIndex + 1;
-                // Going down, going right; checking if n, m is in bounds
-                if (checkIndexN < nWidth && checkIndexM < mHeight)
-                {
-                    // If text is null, add to queue if not already added
-                    if (btnArray[checkIndexN, checkIndexM].btnText == null)
-                    {
-                        // If button is not already in queue AND not already uncovered
-                        if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                        // If text is null, add to queue if not already added
+                        if (btnArray[checkIndexN, checkIndexM].btnText == null)
                         {
-                            heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
+                            // If button is not already in queue AND not already uncovered
+                            if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                            {
+                                heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
 
-                            // Once added to queue, mark blue
-                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                                // Once added to queue, mark blue
+                                btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                            }
+                        }
+                        // If text is NOT '*', it is a number. Reveal and mark cornsilk
+                        else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                        {
+                            btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
+                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
                         }
                     }
-                    // If text is NOT '*', it is a number. Reveal and mark cornsilk
-                    else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                    // S  check (+n, m)
+                    checkIndexN = nIndex + 1;
+                    checkIndexM = mIndex;
+                    // Going down; checking if n is in bounds
+                    if (checkIndexN < nWidth)
                     {
-                        btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
-                        btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
-                    }
-                }
-                // S  check (+n, m)
-                checkIndexN = nIndex + 1;
-                checkIndexM = mIndex;
-                // Going down; checking if n is in bounds
-                if (checkIndexN < nWidth)
-                {
-                    // If text is null, add to queue if not already added
-                    if (btnArray[checkIndexN, checkIndexM].btnText == null)
-                    {
-                        // If button is not already in queue AND not already uncovered
-                        if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                        // If text is null, add to queue if not already added
+                        if (btnArray[checkIndexN, checkIndexM].btnText == null)
                         {
-                            heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
+                            // If button is not already in queue AND not already uncovered
+                            if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                            {
+                                heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
 
-                            // Once added to queue, mark blue
-                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                                // Once added to queue, mark blue
+                                btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                            }
+                        }
+                        // If text is NOT '*', it is a number. Reveal and mark cornsilk
+                        else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                        {
+                            btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
+                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
                         }
                     }
-                    // If text is NOT '*', it is a number. Reveal and mark cornsilk
-                    else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                    // SW check (+n,-m)
+                    checkIndexN = nIndex + 1;
+                    checkIndexM = mIndex - 1;
+                    // Going down, going left; checking if n, m is in bounds
+                    if (checkIndexN < nWidth && checkIndexM >= 0)
                     {
-                        btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
-                        btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
-                    }
-                }
-                // SW check (+n,-m)
-                checkIndexN = nIndex + 1;
-                checkIndexM = mIndex - 1;
-                // Going down, going left; checking if n, m is in bounds
-                if (checkIndexN < nWidth && checkIndexM >= 0)
-                {
-                    // If text is null, add to queue if not already added
-                    if (btnArray[checkIndexN, checkIndexM].btnText == null)
-                    {
-                        // If button is not already in queue AND not already uncovered
-                        if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                        // If text is null, add to queue if not already added
+                        if (btnArray[checkIndexN, checkIndexM].btnText == null)
                         {
-                            heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
+                            // If button is not already in queue AND not already uncovered
+                            if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                            {
+                                heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
 
-                            // Once added to queue, mark blue
-                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                                // Once added to queue, mark blue
+                                btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                            }
+                        }
+                        // If text is NOT '*', it is a number. Reveal and mark cornsilk
+                        else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                        {
+                            btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
+                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
                         }
                     }
-                    // If text is NOT '*', it is a number. Reveal and mark cornsilk
-                    else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                    // W  check (n, -m)
+                    checkIndexN = nIndex;
+                    checkIndexM = mIndex - 1;
+                    // Going left; checking if m is in bounds
+                    if (checkIndexM >= 0)
                     {
-                        btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
-                        btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
-                    }
-                }
-                // W  check (n, -m)
-                checkIndexN = nIndex;
-                checkIndexM = mIndex - 1;
-                // Going left; checking if m is in bounds
-                if (checkIndexM >= 0)
-                {
-                    // If text is null, add to queue if not already added
-                    if (btnArray[checkIndexN, checkIndexM].btnText == null)
-                    {
-                        // If button is not already in queue AND not already uncovered
-                        if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                        // If text is null, add to queue if not already added
+                        if (btnArray[checkIndexN, checkIndexM].btnText == null)
                         {
-                            heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
+                            // If button is not already in queue AND not already uncovered
+                            if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                            {
+                                heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
 
-                            // Once added to queue, mark blue
-                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                                // Once added to queue, mark blue
+                                btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                            }
+                        }
+                        // If text is NOT '*', it is a number. Reveal and mark cornsilk
+                        else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                        {
+                            btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
+                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
                         }
                     }
-                    // If text is NOT '*', it is a number. Reveal and mark cornsilk
-                    else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                    // NW check (-n,-m)
+                    checkIndexN = nIndex - 1;
+                    checkIndexM = mIndex - 1;
+                    // Going left; checking if m is in bounds
+                    if (checkIndexN >= 0 && checkIndexM >= 0)
                     {
-                        btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
-                        btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
-                    }
-                }
-                // NW check (-n,-m)
-                checkIndexN = nIndex - 1;
-                checkIndexM = mIndex - 1;
-                // Going left; checking if m is in bounds
-                if (checkIndexN >= 0 && checkIndexM >= 0)
-                {
-                    // If text is null, add to queue if not already added
-                    if (btnArray[checkIndexN, checkIndexM].btnText == null)
-                    {
-                        // If button is not already in queue AND not already uncovered
-                        if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                        // If text is null, add to queue if not already added
+                        if (btnArray[checkIndexN, checkIndexM].btnText == null)
                         {
-                            heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
+                            // If button is not already in queue AND not already uncovered
+                            if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                            {
+                                heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
 
-                            // Once added to queue, mark blue
-                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                                // Once added to queue, mark blue
+                                btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                            }
+                        }
+                        // If text is NOT '*', it is a number. Reveal and mark cornsilk
+                        else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                        {
+                            btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
+                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
                         }
                     }
-                    // If text is NOT '*', it is a number. Reveal and mark cornsilk
-                    else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
-                    {
-                        btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
-                        btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
-                    }
-                }
 
-                // Once that's all done, marking button as uncovered
-                btnArray[nIndex, mIndex].uncovered = true;
+                    // Once that's all done, marking button as uncovered
+                    btnArray[nIndex, mIndex].uncovered = true;
 
-                // Remove the button currently being checked
-                heldBtns.Dequeue();
-
-            } // End - while
+                    // Remove the button currently being checked
+                    heldBtns.Dequeue();
+                } // End - while
+            } // End - else
         } // End - updateBtnText
 
         // Checking the 8 values around the *. If another *, do nothing; if null, assign "1"; if a number, incr by 1; if NAN and not null, error.
@@ -502,7 +517,7 @@ namespace WindowsFormsApp1
                     btnArray[checkIndexN, checkIndexM].btnText = "1";
 
                     // DEBUG OUTPUT
-                    btnArray[checkIndexN, checkIndexM].heldBtn.Text = "1";
+                    //btnArray[checkIndexN, checkIndexM].heldBtn.Text = "1";
                 }
                 // If number is > 0 - basically, if it's a number - assign it to 1 plus that number (up to 8 theorotically)
                 else if (Int32.Parse(btnArray[checkIndexN, checkIndexM].btnText) >= 0)
@@ -510,7 +525,7 @@ namespace WindowsFormsApp1
                     btnArray[checkIndexN, checkIndexM].btnText = (Int32.Parse(btnArray[checkIndexN, checkIndexM].btnText) + 1).ToString();
 
                     //DEBUG OUTPUT
-                    btnArray[checkIndexN, checkIndexM].heldBtn.Text = (Int32.Parse(btnArray[checkIndexN, checkIndexM].btnText) + 1).ToString();
+                    //btnArray[checkIndexN, checkIndexM].heldBtn.Text = (Int32.Parse(btnArray[checkIndexN, checkIndexM].btnText) + 1).ToString();
                 }
                 else
                 {
