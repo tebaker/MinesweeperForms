@@ -260,8 +260,6 @@ namespace WindowsFormsApp1
         // After btn clicked, the program will preform steps to address the display and update of the clicked on square
         public void updateBtnText(btn clickedBtn)
         {
-            Regex regex = new Regex(@" ^\d$");
-
             // New stack that will hold all the buttons to be checked
             Queue<btn> heldBtns = new Queue<btn>();
 
@@ -271,170 +269,225 @@ namespace WindowsFormsApp1
             // While there are still buttons to be checked, keep looping
             while(heldBtns.Count != 0)
             {
-                // Check each neighbor ( N, NE, E, SE, S, SW, W, NW ) of the button on the top of the stack
-                btn buttonBeingChecked = heldBtns.Peek();
+                btn activeBtn = heldBtns.Peek();
 
-                // Changing color of debug purposes
-                buttonBeingChecked.heldBtn.BackColor = Color.AliceBlue;
-                
-                int n = buttonBeingChecked.btnN;
-                int m = buttonBeingChecked.btnM;
+                MessageBox.Show(activeBtn.btnN + " " + activeBtn.btnM);
 
-                //DEBUG OUTPUR
-                MessageBox.Show(n + ", " + m);
-                
-                // N -/
-                try
+                int nIndex = activeBtn.btnN;
+                int mIndex = activeBtn.btnM;
+
+                // Holding the indecies to be checked in the 8 spaces around the b
+                int checkIndexN = nIndex;
+                int checkIndexM = mIndex;
+
+                // N  check (-n, m)
+                checkIndexN = nIndex - 1;
+                checkIndexM = mIndex;
+                // Going up; checking if n is in bounds
+                if (checkIndexN >= 0)
                 {
-                    //MessageBox.Show("N");
-                    switch (btnArray[n - 1, m].btnText)
+                    // If text is null, then
+                    if(btnArray[checkIndexN, checkIndexM].btnText == null)
+                    {   
+                        // If button is not already in queue AND not already uncovered
+                        if(heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                        {
+                            heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
+
+                            // Once added to queue, mark blue
+                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                        }
+                    }
+                    // If text is NOT '*', it is a number. Reveal and mark cornsilk
+                    else if(btnArray[checkIndexN, checkIndexM].btnText != "*")
                     {
-                        case "*": //  '*' means adjacent bomb, do nothing
-                            break;
-                        case null: // null means adjacent blank button, add to stack for checking
-                            if(!heldBtns.Contains(btnArray[n - 1, m])) heldBtns.Enqueue(btnArray[n - 1, m]);
-                            break;
-                        default: // default means number was hit, reveal number
-                            btnArray[n - 1, m].heldBtn.Text = btnArray[n - 1, m].btnText;
-                            // Changing color of uncovered number button
-                            btnArray[n - 1, m].heldBtn.BackColor = Color.Cornsilk;
-                            break;
+                        btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
+                        btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
                     }
                 }
-                catch (Exception e) { }
-
-                // NE -+
-                try
+                // NE check (-n,+m)
+                checkIndexN = nIndex - 1;
+                checkIndexM = mIndex + 1;
+                // Going up, going right; checking if n, m is in bounds
+                if (checkIndexN >= 0 && checkIndexM < mHeight)
                 {
-                    //MessageBox.Show("NE");
-                    switch (btnArray[n - 1, m + 1].btnText)
+                    // If text is null, add to queue if not already added
+                    if (btnArray[checkIndexN, checkIndexM].btnText == null)
                     {
-                        case "*": //  '*' means adjacent bomb, do nothing
-                            break;
-                        case null: // null means adjacent blank button, add to stack for checking
-                            if(!heldBtns.Contains(btnArray[n - 1, m + 1])) heldBtns.Enqueue(btnArray[n - 1, m + 1]);
-                            break;
-                        default: // default means number was hit, reveal number
-                            btnArray[n - 1, m + 1].heldBtn.Text = btnArray[n - 1, m + 1].btnText;
-                            break;
+                        // If button is not already in queue AND not already uncovered
+                        if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                        {
+                            heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
+
+                            // Once added to queue, mark blue
+                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                        }
+                    }
+                    // If text is NOT '*', it is a number. Reveal and mark cornsilk
+                    else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                    {
+                        btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
+                        btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
                     }
                 }
-                catch (Exception e) { }
-
-                // E /+
-                try
+                // E  check (n, +m)
+                checkIndexN = nIndex;
+                checkIndexM = mIndex + 1;
+                // Going right; checking if m is in bounds
+                if (checkIndexM < mHeight)
                 {
-                    //MessageBox.Show("E");
-                    switch (btnArray[n - 1, m + 1].btnText)
+                    // If text is null, add to queue if not already added
+                    if (btnArray[checkIndexN, checkIndexM].btnText == null)
                     {
-                        case "*": //  '*' means adjacent bomb, do nothing
-                            break;
-                        case null: // null means adjacent blank button, add to stack for checking
-                            if(!heldBtns.Contains(btnArray[n - 1, m + 1])) heldBtns.Enqueue(btnArray[n - 1, m + 1]);
-                            break;
-                        default: // default means number was hit, reveal number
-                            btnArray[n - 1, m + 1].heldBtn.Text = btnArray[n - 1, m + 1].btnText;
-                            break;
+                        // If button is not already in queue AND not already uncovered
+                        if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                        {
+                            heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
+
+                            // Once added to queue, mark blue
+                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                        }
+                    }
+                    // If text is NOT '*', it is a number. Reveal and mark cornsilk
+                    else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                    {
+                        btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
+                        btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
                     }
                 }
-                catch (Exception e) { }
-
-                // SE ++
-                try
+                // SW check (+n,+m)
+                checkIndexN = nIndex + 1;
+                checkIndexM = mIndex + 1;
+                // Going down, going right; checking if n, m is in bounds
+                if (checkIndexN < nWidth && checkIndexM < mHeight)
                 {
-                    //MessageBox.Show("SE");
-                    switch (btnArray[n + 1, m + 1].btnText)
+                    // If text is null, add to queue if not already added
+                    if (btnArray[checkIndexN, checkIndexM].btnText == null)
                     {
-                        case "*": //  '*' means adjacent bomb, do nothing
-                            break;
-                        case null: // null means adjacent blank button, add to stack for checking
-                            if(!heldBtns.Contains(btnArray[n + 1, m + 1])) heldBtns.Enqueue(btnArray[n + 1, m + 1]);
-                            break;
-                        case Rege Int32.Parse(btnArray[n + 1, m + 1].btnText)
-                        default: // default means number was hit, reveal number
-                            break;
+                        // If button is not already in queue AND not already uncovered
+                        if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                        {
+                            heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
+
+                            // Once added to queue, mark blue
+                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                        }
+                    }
+                    // If text is NOT '*', it is a number. Reveal and mark cornsilk
+                    else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                    {
+                        btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
+                        btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
                     }
                 }
-                catch (Exception e) { }
-
-                // S +/
-                try
+                // S  check (+n, m)
+                checkIndexN = nIndex + 1;
+                checkIndexM = mIndex;
+                // Going down; checking if n is in bounds
+                if (checkIndexN < nWidth)
                 {
-                    //MessageBox.Show("S");
-                    switch (btnArray[n + 1, m].btnText)
+                    // If text is null, add to queue if not already added
+                    if (btnArray[checkIndexN, checkIndexM].btnText == null)
                     {
-                        case "*": //  '*' means adjacent bomb, do nothing
-                            break;
-                        case null: // null means adjacent blank button, add to stack for checking
-                            if(!heldBtns.Contains(btnArray[n + 1, m])) heldBtns.Enqueue(btnArray[n + 1, m]);
-                            break;
-                        default: // default means number was hit, reveal number
-                            btnArray[n + 1, m].heldBtn.Text = btnArray[n + 1, m].btnText;
-                            break;
+                        // If button is not already in queue AND not already uncovered
+                        if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                        {
+                            heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
+
+                            // Once added to queue, mark blue
+                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                        }
+                    }
+                    // If text is NOT '*', it is a number. Reveal and mark cornsilk
+                    else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                    {
+                        btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
+                        btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
                     }
                 }
-                catch (Exception e) { }
-
-                // SW +-
-                try
+                // SW check (+n,-m)
+                checkIndexN = nIndex + 1;
+                checkIndexM = mIndex - 1;
+                // Going down, going left; checking if n, m is in bounds
+                if (checkIndexN < nWidth && checkIndexM >= 0)
                 {
-                    //MessageBox.Show("SW");
-                    switch (btnArray[n + 1, m - 1].btnText)
+                    // If text is null, add to queue if not already added
+                    if (btnArray[checkIndexN, checkIndexM].btnText == null)
                     {
-                        case "*": //  '*' means adjacent bomb, do nothing
-                            break;
-                        case null: // null means adjacent blank button, add to stack for checking
-                            if(!heldBtns.Contains(btnArray[n + 1, m - 1])) heldBtns.Enqueue(btnArray[n + 1, m - 1]);
-                            break;
-                        default: // default means number was hit, reveal number
-                            btnArray[n + 1, m - 1].heldBtn.Text = btnArray[n + 1, m - 1].btnText;
-                            break;
+                        // If button is not already in queue AND not already uncovered
+                        if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                        {
+                            heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
+
+                            // Once added to queue, mark blue
+                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                        }
+                    }
+                    // If text is NOT '*', it is a number. Reveal and mark cornsilk
+                    else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                    {
+                        btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
+                        btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
                     }
                 }
-                catch (Exception e) { }
-
-                // W /-
-                try
+                // W  check (n, -m)
+                checkIndexN = nIndex;
+                checkIndexM = mIndex - 1;
+                // Going left; checking if m is in bounds
+                if (checkIndexM >= 0)
                 {
-                    //MessageBox.Show("W");
-                    switch (btnArray[n, m - 1].btnText)
+                    // If text is null, add to queue if not already added
+                    if (btnArray[checkIndexN, checkIndexM].btnText == null)
                     {
-                        case "*": //  '*' means adjacent bomb, do nothing
-                            break;
-                        case null: // null means adjacent blank button, add to stack for checking
-                            if(!heldBtns.Contains(btnArray[n, m - 1])) heldBtns.Enqueue(btnArray[n, m - 1]);
-                            break;
-                        default: // default means number was hit, reveal number
-                            btnArray[n, m - 1].heldBtn.Text = btnArray[n, m - 1].btnText;
-                            break;
+                        // If button is not already in queue AND not already uncovered
+                        if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                        {
+                            heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
+
+                            // Once added to queue, mark blue
+                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                        }
+                    }
+                    // If text is NOT '*', it is a number. Reveal and mark cornsilk
+                    else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                    {
+                        btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
+                        btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
                     }
                 }
-                catch (Exception e) { }
-
-                // NW --
-                try
+                // NW check (-n,-m)
+                checkIndexN = nIndex - 1;
+                checkIndexM = mIndex - 1;
+                // Going left; checking if m is in bounds
+                if (checkIndexN >= 0 && checkIndexM >= 0)
                 {
-                    //MessageBox.Show("NW");
-                    switch (btnArray[n - 1, m - 1].btnText)
+                    // If text is null, add to queue if not already added
+                    if (btnArray[checkIndexN, checkIndexM].btnText == null)
                     {
-                        case "*": //  '*' means adjacent bomb, do nothing
-                            break;
-                        case null: // null means adjacent blank button, add to stack for checking
-                            if(!heldBtns.Contains(btnArray[n - 1, m - 1])) heldBtns.Enqueue(btnArray[n - 1, m - 1]);
-                            break;
-                        default: // default means number was hit, reveal number
-                            btnArray[n - 1, m - 1].heldBtn.Text = btnArray[n - 1, m - 1].btnText;
-                            break;
+                        // If button is not already in queue AND not already uncovered
+                        if (heldBtns.Contains(btnArray[checkIndexN, checkIndexM]) == false && btnArray[checkIndexN, checkIndexM].uncovered == false)
+                        {
+                            heldBtns.Enqueue(btnArray[checkIndexN, checkIndexM]);
+
+                            // Once added to queue, mark blue
+                            btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.AliceBlue;
+                        }
+                    }
+                    // If text is NOT '*', it is a number. Reveal and mark cornsilk
+                    else if (btnArray[checkIndexN, checkIndexM].btnText != "*")
+                    {
+                        btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
+                        btnArray[checkIndexN, checkIndexM].heldBtn.BackColor = Color.Cornsilk;
                     }
                 }
-                catch (Exception e) { }
 
-                // Now that all switch statements are finished, pop current button from stack
+                // Once that's all done, marking button as uncovered
+                btnArray[nIndex, mIndex].uncovered = true;
+
+                // Remove the button currently being checked
                 heldBtns.Dequeue();
-                //MessageBox.Show("Dequeue");
 
-            } // End while
-
+            } // End - while
         } // End - updateBtnText
 
         // Checking the 8 values around the *. If another *, do nothing; if null, assign "1"; if a number, incr by 1; if NAN and not null, error.
