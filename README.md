@@ -4,7 +4,7 @@
 
 ![](/images/MSFormsControlForm.png)
 
- Once the n, m and b variables are set, a new Form of buttons is created with a randomly generated collection of bombs ('\*')
+ Once the n, m and b variables are set, a new Form of buttons is created with a randomly generated collection of bombs (':bomb:')
 
 ![](/images/MSFormsGeneratedBoard.png)
 
@@ -12,7 +12,7 @@
 
 ![](/images/MSFormsGeneratedBoardReveal.png)
 
- There is currently no check for win conditions but if the player clicks on a '\*', the game will reveal the rest of the board and tell the player they've exploaded.
+ There is currently no check for win conditions but if the player clicks on a ':bomb:', the game will reveal the rest of the board and tell the player they've exploaded.
 
 ![](/images/MSFormsGeneratedBoardComplete.png)
 
