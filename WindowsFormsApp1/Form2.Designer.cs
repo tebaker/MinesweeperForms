@@ -1,9 +1,12 @@
 ﻿using System.Windows.Forms;
 using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Text.RegularExpressions;
 
 namespace WindowsFormsApp1
 {
-    struct btn
+    public struct btn
     {
         public Button heldBtn;
         public string btnText;     // What element the button is HOLDING (possibly hidden from the player)
@@ -23,6 +26,16 @@ namespace WindowsFormsApp1
             btnN = n;
             btnM = m;
             uncovered = false;
+        }
+
+        public string toString()
+        {
+            return "btnText: " + btnText + "\n" +
+                   "displayText: " + displayText + "\n" +
+                   "btnTabIndex: " + btnTabIndex.ToString() + "\n" +
+                   "btnN: " + btnN.ToString() + "\n" +
+                   "btnM: " + btnM .ToString() + "\n" +
+                   "uncovered: " + uncovered.ToString();
         }
     } // End - struct
 
@@ -55,8 +68,6 @@ namespace WindowsFormsApp1
             }
             base.Dispose(disposing);
         }
-
-        #region Windows Form Designer generated code
 
         /// <summary>
         /// Required method for Designer support - do not modify
@@ -99,7 +110,7 @@ namespace WindowsFormsApp1
                     btn newBtnContainer = new btn(newBtn, null, null, newBtn.TabIndex, i, j);
 
                     // Event Handler using an Anonymouse Delegate to pass extra data to a click function
-                    newBtn.Click += new System.EventHandler((object sender, EventArgs e)=>btnClick(sender, e, newBtn));
+                    newBtn.Click += new System.EventHandler((object sender, EventArgs e)=>btnClick(sender, e, newBtnContainer));
 
                     btnArray[i,j] = newBtnContainer;
                 }
@@ -119,9 +130,11 @@ namespace WindowsFormsApp1
                3) Is button a numbered element?
                       If so, uncover number - nothing more.
          */
-        private void btnClick(object sender, EventArgs e, Button btn)
+        private void btnClick(object sender, EventArgs e, btn clickedBtn)
         {
-            //MessageBox.Show("TabIndex: " + (btn.TabIndex).ToString());
+            //MessageBox.Show(btn.toString());
+            // On click, calling function for updating button text display
+            updateBtnText(clickedBtn);
         }
 
 
@@ -148,8 +161,6 @@ namespace WindowsFormsApp1
                     {
                         btnArray[nIndex, mIndex].btnText = "*";
                         btnArray[nIndex, mIndex].displayText = "*";
-                        // Updating display test to match held display text
-                        btnArray[nIndex, mIndex].heldBtn.Text = "*";
 
                         // Updating numbers around b
                         updateNumbers(nIndex, mIndex);
@@ -246,6 +257,186 @@ namespace WindowsFormsApp1
             }
         }// End - updateNumbers
 
+        // After btn clicked, the program will preform steps to address the display and update of the clicked on square
+        public void updateBtnText(btn clickedBtn)
+        {
+            Regex regex = new Regex(@" ^\d$");
+
+            // New stack that will hold all the buttons to be checked
+            Queue<btn> heldBtns = new Queue<btn>();
+
+            // Adding first button to be checked
+            heldBtns.Enqueue(clickedBtn);
+
+            // While there are still buttons to be checked, keep looping
+            while(heldBtns.Count != 0)
+            {
+                // Check each neighbor ( N, NE, E, SE, S, SW, W, NW ) of the button on the top of the stack
+                btn buttonBeingChecked = heldBtns.Peek();
+
+                // Changing color of debug purposes
+                buttonBeingChecked.heldBtn.BackColor = Color.AliceBlue;
+                
+                int n = buttonBeingChecked.btnN;
+                int m = buttonBeingChecked.btnM;
+
+                //DEBUG OUTPUR
+                MessageBox.Show(n + ", " + m);
+                
+                // N -/
+                try
+                {
+                    //MessageBox.Show("N");
+                    switch (btnArray[n - 1, m].btnText)
+                    {
+                        case "*": //  '*' means adjacent bomb, do nothing
+                            break;
+                        case null: // null means adjacent blank button, add to stack for checking
+                            if(!heldBtns.Contains(btnArray[n - 1, m])) heldBtns.Enqueue(btnArray[n - 1, m]);
+                            break;
+                        default: // default means number was hit, reveal number
+                            btnArray[n - 1, m].heldBtn.Text = btnArray[n - 1, m].btnText;
+                            // Changing color of uncovered number button
+                            btnArray[n - 1, m].heldBtn.BackColor = Color.Cornsilk;
+                            break;
+                    }
+                }
+                catch (Exception e) { }
+
+                // NE -+
+                try
+                {
+                    //MessageBox.Show("NE");
+                    switch (btnArray[n - 1, m + 1].btnText)
+                    {
+                        case "*": //  '*' means adjacent bomb, do nothing
+                            break;
+                        case null: // null means adjacent blank button, add to stack for checking
+                            if(!heldBtns.Contains(btnArray[n - 1, m + 1])) heldBtns.Enqueue(btnArray[n - 1, m + 1]);
+                            break;
+                        default: // default means number was hit, reveal number
+                            btnArray[n - 1, m + 1].heldBtn.Text = btnArray[n - 1, m + 1].btnText;
+                            break;
+                    }
+                }
+                catch (Exception e) { }
+
+                // E /+
+                try
+                {
+                    //MessageBox.Show("E");
+                    switch (btnArray[n - 1, m + 1].btnText)
+                    {
+                        case "*": //  '*' means adjacent bomb, do nothing
+                            break;
+                        case null: // null means adjacent blank button, add to stack for checking
+                            if(!heldBtns.Contains(btnArray[n - 1, m + 1])) heldBtns.Enqueue(btnArray[n - 1, m + 1]);
+                            break;
+                        default: // default means number was hit, reveal number
+                            btnArray[n - 1, m + 1].heldBtn.Text = btnArray[n - 1, m + 1].btnText;
+                            break;
+                    }
+                }
+                catch (Exception e) { }
+
+                // SE ++
+                try
+                {
+                    //MessageBox.Show("SE");
+                    switch (btnArray[n + 1, m + 1].btnText)
+                    {
+                        case "*": //  '*' means adjacent bomb, do nothing
+                            break;
+                        case null: // null means adjacent blank button, add to stack for checking
+                            if(!heldBtns.Contains(btnArray[n + 1, m + 1])) heldBtns.Enqueue(btnArray[n + 1, m + 1]);
+                            break;
+                        case Rege Int32.Parse(btnArray[n + 1, m + 1].btnText)
+                        default: // default means number was hit, reveal number
+                            break;
+                    }
+                }
+                catch (Exception e) { }
+
+                // S +/
+                try
+                {
+                    //MessageBox.Show("S");
+                    switch (btnArray[n + 1, m].btnText)
+                    {
+                        case "*": //  '*' means adjacent bomb, do nothing
+                            break;
+                        case null: // null means adjacent blank button, add to stack for checking
+                            if(!heldBtns.Contains(btnArray[n + 1, m])) heldBtns.Enqueue(btnArray[n + 1, m]);
+                            break;
+                        default: // default means number was hit, reveal number
+                            btnArray[n + 1, m].heldBtn.Text = btnArray[n + 1, m].btnText;
+                            break;
+                    }
+                }
+                catch (Exception e) { }
+
+                // SW +-
+                try
+                {
+                    //MessageBox.Show("SW");
+                    switch (btnArray[n + 1, m - 1].btnText)
+                    {
+                        case "*": //  '*' means adjacent bomb, do nothing
+                            break;
+                        case null: // null means adjacent blank button, add to stack for checking
+                            if(!heldBtns.Contains(btnArray[n + 1, m - 1])) heldBtns.Enqueue(btnArray[n + 1, m - 1]);
+                            break;
+                        default: // default means number was hit, reveal number
+                            btnArray[n + 1, m - 1].heldBtn.Text = btnArray[n + 1, m - 1].btnText;
+                            break;
+                    }
+                }
+                catch (Exception e) { }
+
+                // W /-
+                try
+                {
+                    //MessageBox.Show("W");
+                    switch (btnArray[n, m - 1].btnText)
+                    {
+                        case "*": //  '*' means adjacent bomb, do nothing
+                            break;
+                        case null: // null means adjacent blank button, add to stack for checking
+                            if(!heldBtns.Contains(btnArray[n, m - 1])) heldBtns.Enqueue(btnArray[n, m - 1]);
+                            break;
+                        default: // default means number was hit, reveal number
+                            btnArray[n, m - 1].heldBtn.Text = btnArray[n, m - 1].btnText;
+                            break;
+                    }
+                }
+                catch (Exception e) { }
+
+                // NW --
+                try
+                {
+                    //MessageBox.Show("NW");
+                    switch (btnArray[n - 1, m - 1].btnText)
+                    {
+                        case "*": //  '*' means adjacent bomb, do nothing
+                            break;
+                        case null: // null means adjacent blank button, add to stack for checking
+                            if(!heldBtns.Contains(btnArray[n - 1, m - 1])) heldBtns.Enqueue(btnArray[n - 1, m - 1]);
+                            break;
+                        default: // default means number was hit, reveal number
+                            btnArray[n - 1, m - 1].heldBtn.Text = btnArray[n - 1, m - 1].btnText;
+                            break;
+                    }
+                }
+                catch (Exception e) { }
+
+                // Now that all switch statements are finished, pop current button from stack
+                heldBtns.Dequeue();
+                //MessageBox.Show("Dequeue");
+
+            } // End while
+
+        } // End - updateBtnText
+
         // Checking the 8 values around the *. If another *, do nothing; if null, assign "1"; if a number, incr by 1; if NAN and not null, error.
         public void incrementValues(int checkIndexN, int checkIndexM)
         {
@@ -256,13 +447,17 @@ namespace WindowsFormsApp1
                 if (btnArray[checkIndexN, checkIndexM].btnText == null)
                 {
                     btnArray[checkIndexN, checkIndexM].btnText = "1";
+
+                    // DEBUG OUTPUT
                     btnArray[checkIndexN, checkIndexM].heldBtn.Text = "1";
                 }
                 // If number is > 0 - basically, if it's a number - assign it to 1 plus that number (up to 8 theorotically)
                 else if (Int32.Parse(btnArray[checkIndexN, checkIndexM].btnText) >= 0)
                 {
                     btnArray[checkIndexN, checkIndexM].btnText = (Int32.Parse(btnArray[checkIndexN, checkIndexM].btnText) + 1).ToString();
-                    btnArray[checkIndexN, checkIndexM].heldBtn.Text = btnArray[checkIndexN, checkIndexM].btnText;
+
+                    //DEBUG OUTPUT
+                    btnArray[checkIndexN, checkIndexM].heldBtn.Text = (Int32.Parse(btnArray[checkIndexN, checkIndexM].btnText) + 1).ToString();
                 }
                 else
                 {
@@ -270,6 +465,6 @@ namespace WindowsFormsApp1
                 }
             }
         }// End - incrementValues
-        #endregion
-    }
+
+    }// End - Form2
 }

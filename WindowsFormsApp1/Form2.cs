@@ -14,18 +14,13 @@ namespace WindowsFormsApp1
     {
 
         int  nWidth, mHeight, bAmt; // Holding w, h, and * data
-        bool generatingAsts, generatingNums, hidingData; // Check boxes for displaying different amounts of data
 
-        public Form2(int nElements, int mElements, int bElements, bool generateAsts, bool generateNums, bool hideData)
+        public Form2(int nElements, int mElements, int bElements)
         {
             // Setting width and height and b for rest of class
             nWidth  = nElements;
             mHeight = mElements;
             bAmt    = bElements;
-
-            generatingAsts = generateAsts;
-            generatingNums = generateNums;
-            hidingData     = hideData;
 
             InitializeComponent(nWidth, mHeight, bAmt);
         }

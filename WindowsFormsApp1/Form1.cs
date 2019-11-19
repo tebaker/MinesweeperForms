@@ -53,7 +53,7 @@ namespace WindowsFormsApp1
         private void buttonGenerate_Click(object sender, EventArgs e)
         {
             // Creating new instance of Form2 that will display the sweeper
-            Form2 form2 = new Form2((int)numericUpDownN.Value, (int)numericUpDownM.Value, (int)numericUpDownB.Value, checkBoxGenAst.Checked, checkBoxGenNum.Checked, checkBoxHideData.Checked);
+            Form2 form2 = new Form2((int)numericUpDownN.Value, (int)numericUpDownM.Value, (int)numericUpDownB.Value);
 
             // Displaying Form2
             form2.ShowDialog();
@@ -62,7 +62,7 @@ namespace WindowsFormsApp1
         private void button1_Click(object sender, EventArgs e)
         {
             // Creating new instance of Form2 that will display the sweeper
-            Form2 form2 = new Form2(15, 15, 15, checkBoxGenAst.Checked, checkBoxGenNum.Checked, checkBoxHideData.Checked);
+            Form2 form2 = new Form2(15, 15, 15);
 
             // Displaying Form2
             form2.ShowDialog();

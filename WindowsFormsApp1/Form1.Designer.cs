@@ -40,9 +40,6 @@
             this.numericUpDownB = new System.Windows.Forms.NumericUpDown();
             this.buttonGenerate = new System.Windows.Forms.Button();
             this.buttonGenDefault = new System.Windows.Forms.Button();
-            this.checkBoxGenAst = new System.Windows.Forms.CheckBox();
-            this.checkBoxGenNum = new System.Windows.Forms.CheckBox();
-            this.checkBoxHideData = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownN)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownM)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownB)).BeginInit();
@@ -183,17 +180,18 @@
             // 
             // buttonGenerate
             // 
-            this.buttonGenerate.Location = new System.Drawing.Point(12, 101);
+            this.buttonGenerate.BackColor = System.Drawing.SystemColors.Control;
+            this.buttonGenerate.Location = new System.Drawing.Point(63, 107);
             this.buttonGenerate.Name = "buttonGenerate";
             this.buttonGenerate.Size = new System.Drawing.Size(75, 23);
             this.buttonGenerate.TabIndex = 13;
             this.buttonGenerate.Text = "Generate";
-            this.buttonGenerate.UseVisualStyleBackColor = true;
+            this.buttonGenerate.UseVisualStyleBackColor = false;
             this.buttonGenerate.Click += new System.EventHandler(this.buttonGenerate_Click);
             // 
             // buttonGenDefault
             // 
-            this.buttonGenDefault.Location = new System.Drawing.Point(12, 130);
+            this.buttonGenDefault.Location = new System.Drawing.Point(63, 136);
             this.buttonGenDefault.Name = "buttonGenDefault";
             this.buttonGenDefault.Size = new System.Drawing.Size(75, 23);
             this.buttonGenDefault.TabIndex = 14;
@@ -201,44 +199,11 @@
             this.buttonGenDefault.UseVisualStyleBackColor = true;
             this.buttonGenDefault.Click += new System.EventHandler(this.button1_Click);
             // 
-            // checkBoxGenAst
-            // 
-            this.checkBoxGenAst.AutoSize = true;
-            this.checkBoxGenAst.Location = new System.Drawing.Point(107, 101);
-            this.checkBoxGenAst.Name = "checkBoxGenAst";
-            this.checkBoxGenAst.Size = new System.Drawing.Size(77, 17);
-            this.checkBoxGenAst.TabIndex = 15;
-            this.checkBoxGenAst.Text = "Generate *";
-            this.checkBoxGenAst.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxGenNum
-            // 
-            this.checkBoxGenNum.AutoSize = true;
-            this.checkBoxGenNum.Location = new System.Drawing.Point(107, 124);
-            this.checkBoxGenNum.Name = "checkBoxGenNum";
-            this.checkBoxGenNum.Size = new System.Drawing.Size(80, 17);
-            this.checkBoxGenNum.TabIndex = 16;
-            this.checkBoxGenNum.Text = "Generate #";
-            this.checkBoxGenNum.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxHideData
-            // 
-            this.checkBoxHideData.AutoSize = true;
-            this.checkBoxHideData.Location = new System.Drawing.Point(107, 147);
-            this.checkBoxHideData.Name = "checkBoxHideData";
-            this.checkBoxHideData.Size = new System.Drawing.Size(74, 17);
-            this.checkBoxHideData.TabIndex = 17;
-            this.checkBoxHideData.Text = "Hide Data";
-            this.checkBoxHideData.UseVisualStyleBackColor = true;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(207, 180);
-            this.Controls.Add(this.checkBoxHideData);
-            this.Controls.Add(this.checkBoxGenNum);
-            this.Controls.Add(this.checkBoxGenAst);
             this.Controls.Add(this.buttonGenDefault);
             this.Controls.Add(this.buttonGenerate);
             this.Controls.Add(this.numericUpDownB);
@@ -274,9 +239,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownB;
         private System.Windows.Forms.Button buttonGenerate;
         private System.Windows.Forms.Button buttonGenDefault;
-        private System.Windows.Forms.CheckBox checkBoxGenAst;
-        private System.Windows.Forms.CheckBox checkBoxGenNum;
-        private System.Windows.Forms.CheckBox checkBoxHideData;
     }
 }
 
