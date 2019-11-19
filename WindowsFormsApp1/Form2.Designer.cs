@@ -268,9 +268,11 @@ namespace WindowsFormsApp1
             // If clicked button is '*', then BOOM and game over
             else if(btnArray[clickedBtn.btnN, clickedBtn.btnM].btnText == "*")
             {
+                revealBoard();
+
                 MessageBox.Show("BOOM!");
 
-                // REVEAL BOARD, END GAME
+                this.Close();
             }
             // if the others fail, that means the button clicked is a blank, time to reveal!
             else
@@ -280,6 +282,9 @@ namespace WindowsFormsApp1
 
                 // Adding first button to be checked
                 heldBtns.Enqueue(clickedBtn);
+
+                // Chaning btn collor to blue
+                btnArray[clickedBtn.btnN, clickedBtn.btnM].heldBtn.BackColor = Color.AliceBlue;
 
                 // While there are still buttons to be checked, keep looping
                 while (heldBtns.Count != 0)
@@ -533,6 +538,17 @@ namespace WindowsFormsApp1
                 }
             }
         }// End - incrementValues
-
+        
+        // Revealing contents of board
+        public void revealBoard()
+        {
+            for(int i = 0; i < nWidth; i++)
+            {
+                for(int j = 0; j < mHeight; j++)
+                {
+                    btnArray[i, j].heldBtn.Text = btnArray[i, j].btnText;
+                }
+            }
+        }
     }// End - Form2
 }
