@@ -1,6 +1,7 @@
 # Game of Minesweeper made using Windows Forms, C\#, and Visual Studios
 
  Created a game of Minesweeper where the player can determine the number of rows, columns, and number of bombs each game has.
+  - Please note: most of the code is located in Form2.Designer.cs
 
 ![](/images/MSFormsControlForm.png)
 
